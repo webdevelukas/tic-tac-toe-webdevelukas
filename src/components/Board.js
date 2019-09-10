@@ -1,5 +1,6 @@
 import React from "react";
 import Square from "./Square";
+import calculateWinner from "../api/calculateWinner";
 
 function Board() {
   const [state, setState] = React.useState({
@@ -7,9 +8,11 @@ function Board() {
     xIsNext: true
   });
 
+  const winner = calculateWinner(state.squares);
+
   function handleClick(index) {
     // Immutability
-    if (state.squares[index]) {
+    if (state.squares[index] || winner) {
       return;
     }
     const squaresCopy = state.squares.slice(); /* Erstellt Kopie des Arrays */
@@ -23,7 +26,12 @@ function Board() {
     );
   }
 
-  const status = `Next player: ${state.xIsNext ? "X" : "O"}`;
+  let status;
+  if (winner) {
+    status = `Winner: ${winner}`;
+  } else {
+    status = `Next player: ${state.xIsNext ? "X" : "O"}`;
+  }
 
   return (
     <div>
