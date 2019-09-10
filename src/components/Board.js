@@ -1,12 +1,29 @@
 import React from "react";
 import Square from "./Square";
 
-function renderSquare(index) {
-  return <Square value={index} />;
-}
+function Board() {
+  const [state, setState] = React.useState({
+    squares: Array(9).fill(null),
+    xIsNext: true
+  });
 
-export default function Board() {
-  const status = "Next player: X";
+  function handleClick(index) {
+    // Immutability
+    if (state.squares[index]) {
+      return;
+    }
+    const squaresCopy = state.squares.slice(); /* Erstellt Kopie des Arrays */
+    squaresCopy[index] = state.xIsNext ? "X" : "O";
+    setState({ squares: squaresCopy, xIsNext: !state.xIsNext });
+  }
+
+  function renderSquare(index) {
+    return (
+      <Square value={state.squares[index]} onClick={() => handleClick(index)} />
+    );
+  }
+
+  const status = `Next player: ${state.xIsNext ? "X" : "O"}`;
 
   return (
     <div>
@@ -29,3 +46,5 @@ export default function Board() {
     </div>
   );
 }
+
+export default Board;
